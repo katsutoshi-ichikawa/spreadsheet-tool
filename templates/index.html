@@ -20,6 +20,7 @@
     <table class="table table-hover table-bordered mb-0">
       <thead class="table-dark">
         <tr>
+          <th>事業部</th>
           <th>店舗名</th>
           <th class="text-end">社員</th>
           <th class="text-end">アルバイト</th>
@@ -29,24 +30,32 @@
         </tr>
       </thead>
       <tbody>
+        {% set ns = namespace(prev_jigyoubu=None) %}
         {% for row in summary %}
-        <tr>
-          <td>
-            <a href="/store/{{ selected }}/{{ row.dept }}" class="text-decoration-none">
-              {{ row.dept }}
-            </a>
-          </td>
-          <td class="text-end">{{ row.seiki if row.seiki else '' }}</td>
-          <td class="text-end">{{ row.part if row.part else '' }}</td>
-          <td class="text-end">{{ row.spot if row.spot else '' }}</td>
-          <td class="text-end">{{ row.other if row.other else '' }}</td>
-          <td class="text-end fw-bold">{{ row.total }}</td>
-        </tr>
+          {% if row.jigyoubu != ns.prev_jigyoubu %}
+            <tr class="table-secondary">
+              <td colspan="7" class="fw-bold">事業部 {{ row.jigyoubu }}</td>
+            </tr>
+            {% set ns.prev_jigyoubu = row.jigyoubu %}
+          {% endif %}
+          <tr>
+            <td class="text-muted small">{{ row.jigyoubu }}</td>
+            <td>
+              <a href="/store/{{ selected }}/{{ row.dept }}" class="text-decoration-none">
+                {{ row.dept }}
+              </a>
+            </td>
+            <td class="text-end">{{ row.seiki if row.seiki else '' }}</td>
+            <td class="text-end">{{ row.part if row.part else '' }}</td>
+            <td class="text-end">{{ row.spot if row.spot else '' }}</td>
+            <td class="text-end">{{ row.other if row.other else '' }}</td>
+            <td class="text-end fw-bold">{{ row.total }}</td>
+          </tr>
         {% endfor %}
       </tbody>
       <tfoot class="table-secondary fw-bold">
         <tr>
-          <td>合計</td>
+          <td colspan="2">合計</td>
           <td class="text-end">{{ summary | sum(attribute='seiki') }}</td>
           <td class="text-end">{{ summary | sum(attribute='part') }}</td>
           <td class="text-end">{{ summary | sum(attribute='spot') }}</td>
