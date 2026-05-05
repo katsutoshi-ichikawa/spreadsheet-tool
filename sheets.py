@@ -70,15 +70,29 @@ def _load_active(sheet_name):
     return active
 
 
+def _get_dept_order():
+    """部署マスタシートの並び順でリストを返す"""
+    client = _client()
+    spreadsheet = client.open_by_url(SPREADSHEET_URL)
+    ws = spreadsheet.worksheet("部署マスタ")
+    rows = ws.get_all_values()
+    # ヘッダー行をスキップ、3列目（部署名）を順番に取得
+    return [r[2] for r in rows[1:] if len(r) >= 3 and r[2]]
+
+
 def get_summary(sheet_name):
-    """店舗別×区分の人数サマリーを返す"""
+    """店舗別×区分の人数サマリーを部署マスタの順で返す"""
     rows = _load_active(sheet_name)
     counts = defaultdict(lambda: {"社員": 0, "アルバイト": 0, "スポットワーカー": 0, "その他": 0})
     for r in rows:
         dept = r[COL_DEPT] or "（未設定）"
         counts[dept][_classify(r[COL_ROLE])] += 1
+
+    dept_order = _get_dept_order()
+    order_map = {dept: i for i, dept in enumerate(dept_order)}
+
     result = []
-    for dept, c in sorted(counts.items(), key=lambda x: -sum(x[1].values())):
+    for dept, c in sorted(counts.items(), key=lambda x: order_map.get(x[0], len(dept_order))):
         result.append({
             "dept": dept,
             "seiki": c["社員"],
