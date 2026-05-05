@@ -23,7 +23,7 @@ gcloud run deploy summary-report \
   --image="${IMAGE}" \
   --region="${REGION}" \
   --platform=managed \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --set-secrets="/secrets/sa-key.json=spreadsheet-sa-key:latest" \
   --set-env-vars="SA_KEY_PATH=/secrets/sa-key.json" \
   --project="${PROJECT}"
