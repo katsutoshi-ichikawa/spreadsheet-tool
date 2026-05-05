@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h4 class="mb-0">店舗別在職者数</h4>
+    <small class="text-muted">在職中: 計 {{ total }}名</small>
+  </div>
+  <form method="get">
+    <select name="sheet" class="form-select" onchange="this.form.submit()">
+      {% for s in sheets %}
+      <option value="{{ s }}" {% if s == selected %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>店舗名</th>
+          <th class="text-end">社員</th>
+          <th class="text-end">アルバイト</th>
+          <th class="text-end">スポット</th>
+          <th class="text-end">その他</th>
+          <th class="text-end">合計</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in summary %}
+        <tr>
+          <td>
+            <a href="/store/{{ selected }}/{{ row.dept }}" class="text-decoration-none">
+              {{ row.dept }}
+            </a>
+          </td>
+          <td class="text-end">{{ row.seiki if row.seiki else '' }}</td>
+          <td class="text-end">{{ row.part if row.part else '' }}</td>
+          <td class="text-end">{{ row.spot if row.spot else '' }}</td>
+          <td class="text-end">{{ row.other if row.other else '' }}</td>
+          <td class="text-end fw-bold">{{ row.total }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="table-secondary fw-bold">
+        <tr>
+          <td>合計</td>
+          <td class="text-end">{{ summary | sum(attribute='seiki') }}</td>
+          <td class="text-end">{{ summary | sum(attribute='part') }}</td>
+          <td class="text-end">{{ summary | sum(attribute='spot') }}</td>
+          <td class="text-end">{{ summary | sum(attribute='other') }}</td>
+          <td class="text-end">{{ total }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

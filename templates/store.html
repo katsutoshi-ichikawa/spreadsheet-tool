@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="mb-3">
+  <a href="/?sheet={{ sheet_name }}" class="btn btn-outline-secondary btn-sm">← 一覧に戻る</a>
+</div>
+
+<div class="mb-3">
+  <h4 class="mb-0">{{ store_name }}</h4>
+  <small class="text-muted">{{ sheet_name }} / 在職中: {{ employees | length }}名</small>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered table-sm mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>従業員コード</th>
+          <th>氏名</th>
+          <th>区分</th>
+          <th class="text-end">年齢</th>
+          <th>入社日</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td class="text-muted small">{{ emp.code }}</td>
+          <td>{{ emp.name }}</td>
+          <td>
+            {% if emp.category == '社員' %}
+              <span class="badge bg-primary">社員</span>
+            {% elif emp.category == 'アルバイト' %}
+              <span class="badge bg-success">アルバイト</span>
+            {% elif emp.category == 'スポットワーカー' %}
+              <span class="badge bg-warning text-dark">スポット</span>
+            {% else %}
+              <span class="badge bg-secondary">その他</span>
+            {% endif %}
+          </td>
+          <td class="text-end">{{ emp.age if emp.age is not none else '-' }}{% if emp.age is not none %}歳{% endif %}</td>
+          <td class="small">{{ emp.hire_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

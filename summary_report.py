@@ -1,4 +1,5 @@
 # スプレッドシート集計ツール
+import os
 import re
 import gspread
 from google.oauth2.service_account import Credentials
@@ -9,7 +10,7 @@ SCOPES = [
 ]
 
 SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1kEyfjH_aKlPOIKIbjYDN7kYoBglcI-hzPeSZoItpEKY/edit"
-JSON_FILE = "spreadsheet-tool-495211-6a9810c661f6.json"
+JSON_FILE = os.environ.get("SA_KEY_PATH", "/home/ichikawa/spreadsheet-tool-495211-6a9810c661f6.json")
 
 # サマリーに含める主要科目（順番どおりに出力）
 TARGET_SUBJECTS = [
