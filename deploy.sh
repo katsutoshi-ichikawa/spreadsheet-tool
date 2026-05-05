@@ -23,9 +23,10 @@ gcloud run deploy summary-report \
   --image="${IMAGE}" \
   --region="${REGION}" \
   --platform=managed \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
+  --iap \
   --set-secrets="/secrets/sa-key.json=spreadsheet-sa-key:latest" \
-  --set-env-vars="SA_KEY_PATH=/secrets/sa-key.json,APP_PASSWORD=8016,SECRET_KEY=563cc0d16f7a13ab31130c00d2ccf05df0b900f1ce280ad43201d8dd908743b8" \
+  --set-env-vars="SA_KEY_PATH=/secrets/sa-key.json" \
   --project="${PROJECT}"
 
 echo "=== デプロイ完了 ==="
